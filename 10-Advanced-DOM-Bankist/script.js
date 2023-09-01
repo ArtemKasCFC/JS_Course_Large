@@ -9,6 +9,7 @@ const header = document.querySelector('.header');
 const logo = document.querySelector('#logo');
 const nav = document.querySelector('.nav');
 const navLinks = document.querySelector('.nav__links');
+const allSections = document.querySelectorAll('.section');
 const section1 = document.querySelector('#section--1');
 const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
@@ -61,20 +62,42 @@ navLinks.addEventListener('click', e => {
 ///////////////////////////////////////
 // Sticky navigation
 
-const obsCallback = entries => {
+const headerObsCallback = entries => {
   const [entry] = entries;
   if (!entry.isIntersecting) nav.classList.add('sticky');
   else nav.classList.remove('sticky');
 };
 
-const obsOptions = {
+const headerObsOptions = {
   root: null,
   threshold: 0,
   rootMargin: `-${nav.getBoundingClientRect().height}px`,
 };
 
-const headerObserver = new IntersectionObserver(obsCallback, obsOptions);
+const headerObserver = new IntersectionObserver(headerObsCallback, headerObsOptions);
 headerObserver.observe(header);
+
+///////////////////////////////////////
+// Reveal sections
+
+const revealSections = (entries, observer) => {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+
+  observer.unobserve(entry.target);
+};
+
+const sectionsObserver = new IntersectionObserver(revealSections, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSections.forEach(section => {
+  sectionsObserver.observe(section);
+  section.classList.add('section--hidden');
+});
 
 ///////////////////////////////////////
 // Tabbed component
