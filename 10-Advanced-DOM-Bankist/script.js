@@ -11,6 +11,7 @@ const nav = document.querySelector('.nav');
 const navLinks = document.querySelector('.nav__links');
 const allSections = document.querySelectorAll('.section');
 const section1 = document.querySelector('#section--1');
+const imgTargets = document.querySelectorAll('img[data-src]');
 const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
@@ -98,6 +99,26 @@ allSections.forEach(section => {
   sectionsObserver.observe(section);
   section.classList.add('section--hidden');
 });
+
+///////////////////////////////////////
+// Lazy loading images
+
+const loadImg = ([entry], observe) => {
+  if (!entry.isIntersecting) return;
+  entry.target.src = entry.target.dataset.src;
+
+  entry.target.addEventListener('load', () => entry.target.classList.remove('lazy-img'));
+
+  observe.unobserve(entry.target);
+};
+
+const imgTargetsObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px',
+});
+
+imgTargets.forEach(img => imgTargetsObserver.observe(img));
 
 ///////////////////////////////////////
 // Tabbed component
