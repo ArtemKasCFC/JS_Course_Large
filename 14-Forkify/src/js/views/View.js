@@ -3,14 +3,18 @@ import icons from 'url:../../img/icons.svg';
 export default class View {
   _data;
 
-  render(data) {
+  render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
     this._data = data;
+
+    if (!render) return this._generateMarkup();
+
     this._clear();
     this._parentEl.insertAdjacentHTML('afterbegin', this._generateMarkup());
   }
 
   update(data) {
+    this._data = data;
     const newMarkup = this._generateMarkup();
     const newDom = document.createRange().createContextualFragment(newMarkup);
     const newElements = [...newDom.querySelectorAll('*')];
