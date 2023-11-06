@@ -7,10 +7,11 @@ class ResultsView extends View {
   _errorMessage = 'There is no recipe with this title. Please try another one.';
 
   _generateMarkup() {
+    const id = window.location.hash.slice(1);
     return this._data
       .map(el => {
         return `<li class="preview">
-                    <a class="preview__link" href="#${el.id}">
+                    <a class="preview__link ${id === el.id ? 'preview__link--active' : ''}" href="#${el.id}">
                     <figure class="preview__fig">
                         <img src="${el.image}" alt="${el.title}" />
                     </figure>

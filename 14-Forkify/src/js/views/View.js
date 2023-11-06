@@ -10,6 +10,27 @@ export default class View {
     this._parentEl.insertAdjacentHTML('afterbegin', this._generateMarkup());
   }
 
+  update(data) {
+    const newMarkup = this._generateMarkup();
+    const newDom = document.createRange().createContextualFragment(newMarkup);
+    const newElements = [...newDom.querySelectorAll('*')];
+    const curElements = [...this._parentEl.querySelectorAll('*')];
+
+    newElements.forEach((newEl, ind) => {
+      // Updates Text
+      if (!newEl.isEqualNode(curElements[ind]) && newEl.firstChild?.nodeValue.trim() !== '') {
+        curElements[ind].textContent = newEl.textContent;
+      }
+      // Updates Text
+      if (!newEl.isEqualNode(curElements[ind])) {
+        // curElements[ind].attributes
+        [...newEl.attributes].forEach(attr => curElements[ind].setAttribute(attr.name, attr.value));
+      }
+    });
+    this._clear();
+    this._parentEl.insertAdjacentHTML('afterbegin', this._generateMarkup());
+  }
+
   renderSpinner() {
     const markup = `<div class="spinner">
                         <svg>
